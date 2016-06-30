@@ -1,37 +1,111 @@
 package wlogga4j;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+
 public class Logger {
-	private String name;
-	private LoggerConfig config;
+	public String name;
+	public LoggerConfig config;
+	PrintStream stream;
+	OutputStream outstream;
 
 	public Logger(String name) {
 		this.name = name;
 		this.config = new LoggerConfig();
-		// TODO Set System.out to a custom PrintStream
+		this.stream = null;
+	}
+
+	public Logger(String name, String fileLocation) {
+		Logger toBeLogger = new Logger(name, new File(fileLocation));
+		this.name = toBeLogger.name;
+		this.config = toBeLogger.config;
+		this.stream = toBeLogger.stream;
+	}
+
+	public Logger(String name, File file) {
+		this.name = name;
+		this.config = new LoggerConfig();
+		try {
+			this.stream = new LoggerPrintStream(this, file);
+		} catch(FileNotFoundException e) {
+			System.out.println("[wLogga4j] File " + file.getAbsolutePath() + " not found!");
+		}
+	}
+
+	public Logger(String name, String fileLocation, boolean setSystemOut) {
+		Logger toBeLogger = new Logger(name, new File(fileLocation));
+		this.name = toBeLogger.name;
+		this.config = toBeLogger.config;
+		this.stream = toBeLogger.stream;
+
+		if(setSystemOut == true) {
+			System.setOut(this.stream);
+		}
+	}
+
+	public Logger(String name, File file, boolean setSystemOut) {
+		this.name = name;
+		this.config = new LoggerConfig();
+		try {
+			this.stream = new LoggerPrintStream(this, file);
+		} catch(FileNotFoundException e) {
+			System.out.println("[wLogga4j] File " + file.getAbsolutePath() + " not found!");
+		}
+
+		if(setSystemOut == true) {
+			System.setOut(this.stream);
+		}
 	}
 
 	public void log(Level level, String message){
 		if(config.allows(level)){
-			System.out.println(
-					"[" +
-							LogMetadata.Date.getDay() +
-							"/" +
-							LogMetadata.Date.getMonth() +
-							"/" +
-							LogMetadata.Date.getYear() +
-							"][" +
-							LogMetadata.Time.get24Hour() +
-							":" +
-							LogMetadata.Time.getMinute() +
-							":" +
-							LogMetadata.Time.getSecond() +
-							"][" +
-							name +
-							"/" +
-							level +
-							"] " +
-							message
-					);
+			if(System.out == this.stream) {
+				System.out.println(
+						"[" +
+								LogMetadata.Date.getDay() +
+								"/" +
+								LogMetadata.Date.getMonth() +
+								"/" +
+								LogMetadata.Date.getYear() +
+								"][" +
+								LogMetadata.Time.get24Hour() +
+								":" +
+								LogMetadata.Time.getMinute() +
+								":" +
+								LogMetadata.Time.getSecond() +
+								"][" +
+								name +
+								"/" +
+								level +
+								"] " +
+								message
+						);
+			} else if(this.stream == null) {
+				System.out.println(
+						"[" +
+								LogMetadata.Date.getDay() +
+								"/" +
+								LogMetadata.Date.getMonth() +
+								"/" +
+								LogMetadata.Date.getYear() +
+								"][" +
+								LogMetadata.Time.get24Hour() +
+								":" +
+								LogMetadata.Time.getMinute() +
+								":" +
+								LogMetadata.Time.getSecond() +
+								"][" +
+								name +
+								"/" +
+								level +
+								"] " +
+								message
+						);
+			} else {
+				this.stream.print(message);
+			}
 		}
 	}
 	public void trace(String message){

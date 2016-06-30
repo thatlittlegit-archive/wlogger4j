@@ -48,8 +48,7 @@ public class LoggerPrintStream extends PrintStream {
 	@Override
 	public void print(String s) {
 		// TODO Add prefix constructor class
-		super.print(					
-				"[" +
+		String toPrint = "[" +
 				LogMetadata.Date.getDay() +
 				"/" +
 				LogMetadata.Date.getMonth() +
@@ -66,7 +65,11 @@ public class LoggerPrintStream extends PrintStream {
 				"/" +
 				Level.INFO +
 				"] " +
-				s);
+				s + "\n";
+		super.print(toPrint);
+		if(this.sisterLogger.config.showStreams == true) {
+		System.out.print(toPrint);
+		}
 	}
 	
 	@Override

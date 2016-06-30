@@ -9,6 +9,8 @@ public class LoggerConfig {
 	public boolean warn  = true;
 	public boolean error = true;
 	public boolean fatal = true;
+	
+	public boolean showStreams = true;
 
 	public boolean allows(Level l) {
 		switch(l) {
