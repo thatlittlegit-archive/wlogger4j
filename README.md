@@ -12,7 +12,7 @@ public class Example {
      Create a logger instance.
      Will output "Hello, World!", with level INFO on September 22nd 2013 at
      8:00:01, as:
-     [22/09/2013][8:00:01][ExampleProgram][/INFO] Hello, World!
+     [22/09/2013][8:00:01][ExampleProgram/INFO] Hello, World!
     */
     static final LOGGER = new Logger("ExampleProgram");
 
