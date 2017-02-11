@@ -9,30 +9,27 @@ import java.io.UnsupportedEncodingException;
 public class LoggerPrintStream extends PrintStream {
 	
 	public Logger sisterLogger;
-
-	public LoggerPrintStream(Logger logger, File file) throws FileNotFoundException {
-		super(file);
+	
+	public LoggerPrintStream(Logger logger, File file, String charset) throws FileNotFoundException, UnsupportedEncodingException {
+		super(file, charset);
 		this.sisterLogger = logger;
 	}
 	
-	public LoggerPrintStream(Logger logger, File file, String csn) throws FileNotFoundException, UnsupportedEncodingException {
-		super(file, csn);
-		this.sisterLogger = logger;
-	}
-	
-	public LoggerPrintStream(Logger logger, OutputStream out) {
-		super(out, true);
-		this.sisterLogger = logger;
-	}
-	
-	public LoggerPrintStream(Logger logger, OutputStream out, boolean autoFlush) {
-		super(out, autoFlush);
-		this.sisterLogger = logger;
+	public LoggerPrintStream(Logger logger, File file) throws FileNotFoundException, UnsupportedEncodingException{
+		this(logger, file, "UTF-8");
 	}
 	
 	public LoggerPrintStream(Logger logger, OutputStream out, boolean autoFlush, String encoding) throws UnsupportedEncodingException {
 		super(out, autoFlush, encoding);
 		this.sisterLogger = logger;
+	}
+	
+	public LoggerPrintStream(Logger logger, OutputStream out) throws UnsupportedEncodingException {
+		this(logger, out, true, "UTF-8");
+	}
+	
+	public LoggerPrintStream(Logger logger, OutputStream out, boolean autoFlush) throws UnsupportedEncodingException {
+		this(logger, out, autoFlush, "UTF-8");
 	}
 	
 	public LoggerPrintStream(Logger logger, String fileName) throws FileNotFoundException {
@@ -45,8 +42,7 @@ public class LoggerPrintStream extends PrintStream {
 		this.sisterLogger = logger;
 	}
 	
-	@Override
-	public void print(String s) {
+	public void output(String s) {
 		// TODO Add prefix constructor class
 		String toPrint = "[" +
 				LogMetadata.Date.getDay() +
@@ -66,53 +62,53 @@ public class LoggerPrintStream extends PrintStream {
 				Level.INFO +
 				"] " +
 				s + "\n";
-		super.print(toPrint);
+		println(toPrint);
 		if(this.sisterLogger.config.showStreams == true) {
-		System.out.print(toPrint);
+			System.out.print(toPrint);
 		}
 	}
 	
-	@Override
-	public void print(boolean b) {
-		print(new Boolean(b).toString());
+	
+	public void output(boolean b) {
+		output(new Boolean(b).toString());
 	}
 	
-	@Override
-	public void print(char c) {
-		print(new Character(c).toString());
+	
+	public void output(char c) {
+		output(new Character(c).toString());
 	}
 	
-	@Override
-	public void print(char[] cs) {
+	
+	public void output(char[] cs) {
 		String s = "";
 		for(char c : cs) {
 			s += new Character(c).toString();
 		}
-		print(s);
+		output(s);
 	}
 	
-	@Override
-	public void print(double d) {
-		print(new Double(d).toString());
+	
+	public void output(double d) {
+		output(new Double(d).toString());
 	}
 	
-	@Override
-	public void print(float f) {
-		print(new Float(f).toString());
+	
+	public void output(float f) {
+		output(new Float(f).toString());
 	}
 	
-	@Override
-	public void print(int i) {
-		print(new Integer(i).toString());
+	
+	public void output(int i) {
+		output(new Integer(i).toString());
 	}
 	
-	@Override
-	public void print(long l) {
-		print(new Long(l).toString());
+	
+	public void output(long l) {
+		output(new Long(l).toString());
 	}
 	
-	@Override
-	public void print(Object obj) {
-		print(obj.toString());
+	
+	public void output(Object obj) {
+		output(obj.toString());
 	}
 }

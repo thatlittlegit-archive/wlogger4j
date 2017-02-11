@@ -12,7 +12,7 @@ public class TestLog {
 		l.log(Level.ERROR, "Error Level");
 		l.log(Level.FATAL, "Fatal Level");
 		
-		Logger l1 = new Logger("Test Logger 2", "/home/wapidstyle/log.log");
+		Logger l1 = new Logger("Test Logger 2", "test.log");
 		l1.log(Level.TRACE, "Trace Level");
 		l1.log(Level.DEBUG, "Debug Level");
 		l1.log(Level.FINER, "Finer Level");

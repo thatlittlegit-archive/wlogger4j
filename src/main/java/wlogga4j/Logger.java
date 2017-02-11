@@ -3,12 +3,12 @@ package wlogga4j;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.OutputStream;
-import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 
 public class Logger {
 	public String name;
 	public LoggerConfig config;
-	PrintStream stream;
+	LoggerPrintStream stream;
 	OutputStream outstream;
 
 	public Logger(String name) {
@@ -25,13 +25,7 @@ public class Logger {
 	}
 
 	public Logger(String name, File file) {
-		this.name = name;
-		this.config = new LoggerConfig();
-		try {
-			this.stream = new LoggerPrintStream(this, file);
-		} catch(FileNotFoundException e) {
-			System.out.println("[wLogga4j] File " + file.getAbsolutePath() + " not found!");
-		}
+		this(name, file, false);
 	}
 
 	public Logger(String name, String fileLocation, boolean setSystemOut) {
@@ -46,17 +40,28 @@ public class Logger {
 	}
 
 	public Logger(String name, File file, boolean setSystemOut) {
+		boolean errored = false;
 		this.name = name;
 		this.config = new LoggerConfig();
 		try {
 			this.stream = new LoggerPrintStream(this, file);
 		} catch(FileNotFoundException e) {
-			System.out.println("[wLogga4j] File " + file.getAbsolutePath() + " not found!");
+			errored = true;
+			getEmptyLoggerForLib().error("File " + file.getAbsolutePath() + " not found!");
+		} catch(UnsupportedEncodingException e) {
+			errored = true;
+			Logger tempLogger = getEmptyLoggerForLib();
+			tempLogger.warn("Unsupported charset in what should be preset!");
+			tempLogger.warn("Please file a bug report.");
 		}
 
-		if(setSystemOut == true) {
+		if(setSystemOut == true && errored != true) {
 			System.setOut(this.stream);
 		}
+	}
+	
+	private Logger getEmptyLoggerForLib() {
+		return new Logger("wlogger4j");
 	}
 
 	public void log(Level level, String message){
@@ -104,7 +109,7 @@ public class Logger {
 								message
 						);
 			} else {
-				this.stream.print(message);
+				this.stream.output(message);
 			}
 		}
 	}
