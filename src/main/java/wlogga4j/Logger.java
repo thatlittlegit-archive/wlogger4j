@@ -8,7 +8,7 @@ import java.io.UnsupportedEncodingException;
 public class Logger {
 	public String name;
 	public LoggerConfig config;
-	LoggerPrintStream stream;
+	public LoggerPrintStream stream;
 	OutputStream outstream;
 
 	public Logger(String name) {
