@@ -2,14 +2,12 @@ package wlogger4j;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
 public class Logger {
 	public String name;
 	public LoggerConfig config;
 	public LoggerPrintStream stream;
-	OutputStream outstream;
 
 	public Logger(String name) {
 		this.name = name;
