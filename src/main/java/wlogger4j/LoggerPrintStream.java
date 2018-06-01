@@ -61,7 +61,7 @@ public class LoggerPrintStream extends PrintStream {
 				"/" +
 				Level.INFO +
 				"] " +
-				s + "\n";
+				s;
 		println(toPrint);
 		if(this.sisterLogger.config.showStreams == true) {
 			System.out.print(toPrint);
