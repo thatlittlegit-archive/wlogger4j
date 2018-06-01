@@ -14,7 +14,11 @@ public class Logger {
 	public Logger(String name) {
 		this.name = name;
 		this.config = new LoggerConfig();
-		this.stream = null;
+		try {
+			this.stream = new LoggerPrintStream(this, System.out);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public Logger(String name, String fileLocation) {
@@ -66,53 +70,10 @@ public class Logger {
 
 	public void log(Level level, String message){
 		if(config.allows(level)){
-			if(System.out == this.stream) {
-				System.out.println(
-						"[" +
-								LogMetadata.Date.getDay() +
-								"/" +
-								LogMetadata.Date.getMonth() +
-								"/" +
-								LogMetadata.Date.getYear() +
-								"][" +
-								LogMetadata.Time.get24Hour() +
-								":" +
-								LogMetadata.Time.getMinute() +
-								":" +
-								LogMetadata.Time.getSecond() +
-								"][" +
-								name +
-								"/" +
-								level +
-								"] " +
-								message
-						);
-			} else if(this.stream == null) {
-				System.out.println(
-						"[" +
-								LogMetadata.Date.getDay() +
-								"/" +
-								LogMetadata.Date.getMonth() +
-								"/" +
-								LogMetadata.Date.getYear() +
-								"][" +
-								LogMetadata.Time.get24Hour() +
-								":" +
-								LogMetadata.Time.getMinute() +
-								":" +
-								LogMetadata.Time.getSecond() +
-								"][" +
-								name +
-								"/" +
-								level +
-								"] " +
-								message
-						);
-			} else {
-				this.stream.output(message);
-			}
+			this.stream.output(level, message);
 		}
 	}
+
 	public void trace(String message){
 		log(Level.TRACE, message);
 	}

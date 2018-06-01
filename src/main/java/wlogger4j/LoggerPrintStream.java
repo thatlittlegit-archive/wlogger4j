@@ -42,7 +42,7 @@ public class LoggerPrintStream extends PrintStream {
 		this.sisterLogger = logger;
 	}
 	
-	public void output(String s) {
+	public void output(Level level, String s) {
 		// TODO Add prefix constructor class
 		String toPrint = "[" +
 				LogMetadata.Date.getDay() +
