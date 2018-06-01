@@ -1,4 +1,4 @@
-package wlogga4j;
+package wlogger4j;
 
 public class LoggerConfig {
 	public boolean trace = false;
