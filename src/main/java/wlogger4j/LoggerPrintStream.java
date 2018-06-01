@@ -59,13 +59,10 @@ public class LoggerPrintStream extends PrintStream {
 				"][" +
 				sisterLogger.name +
 				"/" +
-				Level.INFO +
+				level +
 				"] " +
 				s;
 		println(toPrint);
-		if(this.sisterLogger.config.showStreams == true) {
-			System.out.print(toPrint);
-		}
 	}
 	
 	
