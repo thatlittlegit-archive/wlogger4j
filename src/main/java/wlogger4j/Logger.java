@@ -2,6 +2,7 @@ package wlogger4j;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 public class Logger {
@@ -19,51 +20,22 @@ public class Logger {
 		}
 	}
 
-	public Logger(String name, String fileLocation) {
+	public Logger(String name, String fileLocation) throws UnsupportedEncodingException, IOException {
 		Logger toBeLogger = new Logger(name, new File(fileLocation));
 		this.name = toBeLogger.name;
 		this.config = toBeLogger.config;
 		this.stream = toBeLogger.stream;
 	}
 
-	public Logger(String name, File file) {
-		this(name, file, false);
-	}
-
-	public Logger(String name, String fileLocation, boolean setSystemOut) {
-		Logger toBeLogger = new Logger(name, new File(fileLocation));
-		this.name = toBeLogger.name;
-		this.config = toBeLogger.config;
-		this.stream = toBeLogger.stream;
-
-		if(setSystemOut == true) {
-			System.setOut(this.stream);
-		}
-	}
-
-	public Logger(String name, File file, boolean setSystemOut) {
-		boolean errored = false;
+	public Logger(String name, File file) throws UnsupportedEncodingException, IOException {
 		this.name = name;
 		this.config = new LoggerConfig();
 		try {
 			this.stream = new LoggerPrintStream(this, file);
 		} catch(FileNotFoundException e) {
-			errored = true;
-			getEmptyLoggerForLib().error("File " + file.getAbsolutePath() + " not found!");
-		} catch(UnsupportedEncodingException e) {
-			errored = true;
-			Logger tempLogger = getEmptyLoggerForLib();
-			tempLogger.warn("Unsupported charset in what should be preset!");
-			tempLogger.warn("Please file a bug report.");
+			file.createNewFile();
+			this.stream = new Logger(name, file).stream; // HACK replace constructor call
 		}
-
-		if(setSystemOut == true && errored != true) {
-			System.setOut(this.stream);
-		}
-	}
-	
-	private Logger getEmptyLoggerForLib() {
-		return new Logger("wlogger4j");
 	}
 
 	public void log(Level level, String message){
