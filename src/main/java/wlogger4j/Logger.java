@@ -14,7 +14,7 @@ public class Logger {
 		this.name = name;
 		this.config = new LoggerConfig();
 		try {
-			this.stream = new LoggerPrintStream(this, System.out);
+			this.stream = new LoggerPrintStream(name, System.out);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -31,7 +31,7 @@ public class Logger {
 		this.name = name;
 		this.config = new LoggerConfig();
 		try {
-			this.stream = new LoggerPrintStream(this, file);
+			this.stream = new LoggerPrintStream(name, file);
 		} catch(FileNotFoundException e) {
 			file.createNewFile();
 			this.stream = new Logger(name, file).stream; // HACK replace constructor call

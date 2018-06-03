@@ -7,39 +7,38 @@ import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 
 public class LoggerPrintStream extends PrintStream {
+	public String name;
 	
-	public Logger sisterLogger;
-	
-	public LoggerPrintStream(Logger logger, File file, String charset) throws FileNotFoundException, UnsupportedEncodingException {
+	public LoggerPrintStream(String name, File file, String charset) throws FileNotFoundException, UnsupportedEncodingException {
 		super(file, charset);
-		this.sisterLogger = logger;
+		this.name = name;
 	}
 	
-	public LoggerPrintStream(Logger logger, File file) throws FileNotFoundException, UnsupportedEncodingException{
-		this(logger, file, "UTF-8");
+	public LoggerPrintStream(String name, File file) throws FileNotFoundException, UnsupportedEncodingException{
+		this(name, file, "UTF-8");
 	}
 	
-	public LoggerPrintStream(Logger logger, OutputStream out, boolean autoFlush, String encoding) throws UnsupportedEncodingException {
+	public LoggerPrintStream(String name, OutputStream out, boolean autoFlush, String encoding) throws UnsupportedEncodingException {
 		super(out, autoFlush, encoding);
-		this.sisterLogger = logger;
+		this.name = name;
 	}
 	
-	public LoggerPrintStream(Logger logger, OutputStream out) throws UnsupportedEncodingException {
-		this(logger, out, true, "UTF-8");
+	public LoggerPrintStream(String name, OutputStream out) throws UnsupportedEncodingException {
+		this(name, out, true, "UTF-8");
 	}
 	
-	public LoggerPrintStream(Logger logger, OutputStream out, boolean autoFlush) throws UnsupportedEncodingException {
-		this(logger, out, autoFlush, "UTF-8");
+	public LoggerPrintStream(String name, OutputStream out, boolean autoFlush) throws UnsupportedEncodingException {
+		this(name, out, autoFlush, "UTF-8");
 	}
 	
-	public LoggerPrintStream(Logger logger, String fileName) throws FileNotFoundException {
+	public LoggerPrintStream(String name, String fileName) throws FileNotFoundException {
 		super(fileName);
-		this.sisterLogger = logger;
+		this.name = name;
 	}
 	
-	public LoggerPrintStream(Logger logger, String fileName, String csn) throws FileNotFoundException, UnsupportedEncodingException {
+	public LoggerPrintStream(String name, String fileName, String csn) throws FileNotFoundException, UnsupportedEncodingException {
 		super(fileName, csn);
-		this.sisterLogger = logger;
+		this.name = name;
 	}
 	
 	public void output(Level level, String s) {
@@ -57,7 +56,7 @@ public class LoggerPrintStream extends PrintStream {
 				":" +
 				LogMetadata.Time.getSecond() +
 				"][" +
-				sisterLogger.name +
+				name +
 				"/" +
 				level +
 				"] " +
