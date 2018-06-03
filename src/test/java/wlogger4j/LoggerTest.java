@@ -36,12 +36,6 @@ public class LoggerTest {
 	}
 
 	@Test
-	public void outputToStandardOut() {
-		Logger l = new Logger("test");
-		assertSame(l.stream, System.out);
-	}
-
-	@Test
 	public void outputToFileName() throws UnsupportedEncodingException, IOException {
 		Logger l = new Logger("test", "test.log");
 		assertNotEquals(l.stream, System.out);
