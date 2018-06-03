@@ -10,14 +10,10 @@ public class Logger {
 	public LoggerConfig config;
 	public LoggerPrintStream stream;
 
-	public Logger(String name) {
+	public Logger(String name) throws UnsupportedEncodingException {
 		this.name = name;
 		this.config = new LoggerConfig();
-		try {
-			this.stream = new LoggerPrintStream(name, System.out);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
+		this.stream = new LoggerPrintStream(name, System.out);
 	}
 
 	public Logger(String name, String fileLocation) throws UnsupportedEncodingException, IOException {
