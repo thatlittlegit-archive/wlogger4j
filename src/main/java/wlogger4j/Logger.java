@@ -1,7 +1,6 @@
 package wlogger4j;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -14,27 +13,30 @@ public class Logger {
 	public Runnable onIOException = null;
 
 	public Logger(String name) throws UnsupportedEncodingException {
-		this.name = name;
-		this.config = new LoggerConfig();
-		this.stream = System.out;
+		this(name, System.out);
 	}
 
 	public Logger(String name, String fileLocation) throws UnsupportedEncodingException, IOException {
-		Logger toBeLogger = new Logger(name, new File(fileLocation));
-		this.name = toBeLogger.name;
-		this.config = toBeLogger.config;
-		this.stream = toBeLogger.stream;
+		this(name, new File(fileLocation));
 	}
 
 	public Logger(String name, File file) throws UnsupportedEncodingException, IOException {
+		this(name, new PrintStream(file));
+	}
+	
+	public Logger(String name, OutputStream stream) {
+		this(name, stream, null);
+	}
+	
+	public Logger(String name, OutputStream stream, Runnable onIOException) {
+		this(name, new LoggerConfig(), stream, onIOException);
+	}
+	
+	public Logger(String name, LoggerConfig config, OutputStream stream, Runnable onIOException) {
 		this.name = name;
-		this.config = new LoggerConfig();
-		try {
-			this.stream = new PrintStream(file);
-		} catch(FileNotFoundException e) {
-			file.createNewFile();
-			this.stream = new Logger(name, file).stream; // HACK replace constructor call
-		}
+		this.config = config;
+		this.stream = stream;
+		this.onIOException = onIOException;
 	}
 
 	public void log(Level level, String message) {
