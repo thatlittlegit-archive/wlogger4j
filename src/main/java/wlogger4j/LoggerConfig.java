@@ -10,7 +10,7 @@ public class LoggerConfig {
 	public boolean error = true;
 	public boolean fatal = true;
 
-	public boolean allows(Level l) {
+	public boolean allows(Logger.Level l) {
 		switch(l) {
 		case TRACE:
 			return trace;

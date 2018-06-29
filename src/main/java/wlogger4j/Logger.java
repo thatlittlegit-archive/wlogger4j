@@ -39,8 +39,8 @@ public class Logger {
 		this.onIOException = onIOException;
 	}
 
-	public void log(Level level, String message) {
-		if(config.allows(level)){
+	public void log(Level debug, String message) {
+		if(config.allows(debug)){
 			try {
 				this.stream.write(("[" +
 						LogMetadata.Date.getDay() +
@@ -57,7 +57,7 @@ public class Logger {
 						"][" +
 						name +
 						"/" +
-						level +
+						debug +
 						"] " +
 						message +
 						"\n").getBytes());
@@ -95,5 +95,20 @@ public class Logger {
 	}
 	public void fatal(String message){
 		log(Level.FATAL, message);
+	}
+	
+	public enum Level {
+		TRACE,
+		DEBUG,
+		FINE,
+		FINER,
+		INFO,
+		WARN,
+		ERROR,
+		FATAL;
+		
+		public boolean config(Level l, LoggerConfig lc) {
+			return lc.allows(l);
+		}
 	}
 }

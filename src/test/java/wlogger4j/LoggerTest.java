@@ -25,14 +25,14 @@ public class LoggerTest {
 	}
 	
 	private static void loggerDummyInput(Logger l) {
-		l.log(Level.TRACE, "Trace Level");
-		l.log(Level.DEBUG, "Debug Level");
-		l.log(Level.FINER, "Finer Level");
-		l.log(Level.FINE,  "Fine Level");
-		l.log(Level.INFO,  "Info Level");
-		l.log(Level.WARN,  "Warn Level");
-		l.log(Level.ERROR, "Error Level");
-		l.log(Level.FATAL, "Fatal Level");	
+		l.log(Logger.Level.TRACE, "Trace Level");
+		l.log(Logger.Level.DEBUG, "Debug Level");
+		l.log(Logger.Level.FINER, "Finer Level");
+		l.log(Logger.Level.FINE,  "Fine Level");
+		l.log(Logger.Level.INFO,  "Info Level");
+		l.log(Logger.Level.WARN,  "Warn Level");
+		l.log(Logger.Level.ERROR, "Error Level");
+		l.log(Logger.Level.FATAL, "Fatal Level");	
 	}
 
 	@Test
