@@ -3,17 +3,20 @@ package wlogger4j;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 
 public class Logger {
 	public String name;
 	public LoggerConfig config;
-	public LoggerPrintStream stream;
+	public OutputStream stream;
+	public Runnable onIOException = null;
 
 	public Logger(String name) throws UnsupportedEncodingException {
 		this.name = name;
 		this.config = new LoggerConfig();
-		this.stream = new LoggerPrintStream(name, System.out);
+		this.stream = System.out;
 	}
 
 	public Logger(String name, String fileLocation) throws UnsupportedEncodingException, IOException {
@@ -27,16 +30,43 @@ public class Logger {
 		this.name = name;
 		this.config = new LoggerConfig();
 		try {
-			this.stream = new LoggerPrintStream(name, file);
+			this.stream = new PrintStream(file);
 		} catch(FileNotFoundException e) {
 			file.createNewFile();
 			this.stream = new Logger(name, file).stream; // HACK replace constructor call
 		}
 	}
 
-	public void log(Level level, String message){
+	public void log(Level level, String message) {
 		if(config.allows(level)){
-			this.stream.output(level, message);
+			try {
+				this.stream.write(("[" +
+						LogMetadata.Date.getDay() +
+						"/" +
+						LogMetadata.Date.getMonth() +
+						"/" +
+						LogMetadata.Date.getYear() +
+						"][" +
+						LogMetadata.Time.get24Hour() +
+						":" +
+						LogMetadata.Time.getMinute() +
+						":" +
+						LogMetadata.Time.getSecond() +
+						"][" +
+						name +
+						"/" +
+						level +
+						"] " +
+						message +
+						"\n").getBytes());
+			} catch (IOException e) {
+				if (onIOException == null) {
+					e.printStackTrace();
+					System.exit(120);
+				} else {
+					onIOException.run();
+				}
+			}
 		}
 	}
 
