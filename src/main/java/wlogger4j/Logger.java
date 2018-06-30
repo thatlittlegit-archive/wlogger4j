@@ -5,12 +5,15 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
+import java.time.Instant;
+import java.time.ZoneOffset;
 
 public class Logger {
 	public String name;
 	public LoggerConfig config;
 	public OutputStream stream;
 	public Runnable onIOException = null;
+	public static String loggerFormat = "[!ISOD][!ISOT:!SECOND][!NAME][!LEVEL] !MESSAGE";
 
 	public Logger(String name) throws UnsupportedEncodingException {
 		this(name, System.out);
@@ -38,29 +41,29 @@ public class Logger {
 		this.stream = stream;
 		this.onIOException = onIOException;
 	}
+	
+	private String formatDateTime(String pattern) {
+		return java.time.format.DateTimeFormatter.ofPattern(pattern)
+                .withZone(ZoneOffset.systemDefault())
+                .format(Instant.now());
+	}
 
-	public void log(Level debug, String message) {
-		if(config.allows(debug)){
+	public void log(Level level, String message) {
+		if(config.allows(level)){
 			try {
-				this.stream.write(("[" +
-						LogMetadata.Date.getDay() +
-						"/" +
-						LogMetadata.Date.getMonth() +
-						"/" +
-						LogMetadata.Date.getYear() +
-						"][" +
-						LogMetadata.Time.get24Hour() +
-						":" +
-						LogMetadata.Time.getMinute() +
-						":" +
-						LogMetadata.Time.getSecond() +
-						"][" +
-						name +
-						"/" +
-						debug +
-						"] " +
-						message +
-						"\n").getBytes());
+				this.stream.write((loggerFormat + "\n")
+						// https://stackoverflow.com/a/3914546
+						.replaceAll("!ISOD", formatDateTime("yyyy-MM-dd"))
+						.replaceAll("!ISOT", formatDateTime("HH:mm"))
+						.replaceAll("!HOUR", formatDateTime("HH"))
+						.replaceAll("!MINUTE", formatDateTime("mm"))
+						.replaceAll("!SECOND", formatDateTime("ss"))
+						.replaceAll("!YEAR", formatDateTime("yyyy"))
+						.replaceAll("!MONTH", formatDateTime("MM"))
+						.replaceAll("!DAY", formatDateTime("dd"))
+						.replaceAll("!NAME",  this.name)
+						.replaceAll("!LEVEL", level.toString())
+						.replaceAll("!MESSAGE", message).getBytes());
 			} catch (IOException e) {
 				if (onIOException == null) {
 					e.printStackTrace();
