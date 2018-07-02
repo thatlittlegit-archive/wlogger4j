@@ -1,4 +1,9 @@
 apply plugin: 'java'
+
+wrapper {
+   gradleVersion = '4.8'
+}
+
 repositories {
     jcenter()
 }
