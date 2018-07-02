@@ -33,6 +33,6 @@ public class LoggerConfigTest {
 	@Test
 	public void toStringTest() {
 		LoggerConfig lc = templateConfig();
-		assertEquals(lc.toString(), "LoggerConfig<" + Integer.toHexString(lc.hashCode()) + "> 1010101");
+		assertEquals(lc.toString(), "LoggerConfig<1010101>");
 	}
 }
