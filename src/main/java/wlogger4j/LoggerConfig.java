@@ -33,4 +33,18 @@ public class LoggerConfig {
 		
 		}
 	}
+
+	@Override
+	public String toString() {
+		return "LoggerConfig<" +
+			Integer.toHexString(this.hashCode()) +
+			"> " +
+			(trace == true ? "1" : "0") +
+			(debug == true ? "1" : "0") +
+			(finer == true ? "1" : "0") +
+			(fine  == true ? "1" : "0") +
+			(info  == true ? "1" : "0") +
+			(warn  == true ? "1" : "0") +
+			(error == true ? "1" : "0");
+	}
 }
