@@ -1,8 +1,12 @@
-# wLogger4j
+# DEPRECATION NOTICE <!-- !!! -->
+wLogger4j can be replaced with `java.util.logging`; please use it with a custom
+formatter instead of this huge package.
+
+## wLogger4j
 ### Because Apache Log4j never seems to work... :-1:
 wLogger4j is a simplistic version of Log4j. It's not extremely customizable
 (yet), but it's just what's necessary for a simple program.
-## Usage
+### Usage
 This program will log with every level available.
 ```java
 import wlogga4j.Logger;
